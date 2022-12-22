@@ -1,5 +1,3 @@
-https://discord.gg/AQcDwW7QRm
-
 Simple notepad script using ox_lib and ox_inventory
 
 no framework
