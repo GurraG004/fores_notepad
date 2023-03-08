@@ -1,8 +1,12 @@
+local menuIsOpen = false
+
 function Notes(data, data2)
 	local text = data2.metadata.text
 
 	if not text then
+		menuIsOpen = true
 		local input = lib.inputDialog(String.notepad, {'Text'})
+		menuIsOpen = false
 		if not input[1] then return end
 		text = tostring(input[1])
 		if string.len(text) >= Config.MaxLength then lib.notify({title = String.tolongmsg, type = 'error'}) return end
@@ -31,7 +35,9 @@ function Notes(data, data2)
 			})
 
 			if alert == 'confirm' then
+				menuIsOpen = true
 				local input = lib.inputDialog(String.notepad, {'Text'})
+				menuIsOpen = false
 				if not input[1] then return end
 				text = tostring(input[1])
 				if string.len(text) >= Config.MaxLength then lib.notify({title = String.tolongmsg, type = 'error'}) return end
@@ -41,5 +47,16 @@ function Notes(data, data2)
 		end
 	end
 end
+
+CreateThread(function()
+    while true do
+        local sleep = 300
+        if menuIsOpen then
+            sleep = 5
+            DisableAllControlActions(0)
+        end
+        Wait(sleep)
+    end
+ end)
 
 exports("notepad", Notes)
